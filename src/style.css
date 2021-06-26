@@ -1,7 +1,67 @@
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  text-align: left;
+  color: white;
+  background-color: black;
+  font-weight: bold;
+  height: 100vh;
+}
+
+body {
+  margin: 0;
+}
+
+input {
+  background-color: black;
+  border: 5px solid white;
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+}
+
+.container {
+  margin-left: 0;
+  margin-right: 0;
+  background-color: black;
+  border: 5px solid white;
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+}
+
+.scrolling-history {
+  max-height: 400px;
+  overflow: scroll;
+  margin-bottom: 5px;
+}
+
+p.error-text {
+  color: red;
+  font-weight: bold;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+p.command-text {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+/* Flexbox layout */
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+  padding: 10px;
 }

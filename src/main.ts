@@ -1,4 +1,16 @@
 import './style.css'
-import { boot } from './typer'
+import { Input } from './input'
+import { State } from './state'
 
-boot()
+export class Main {
+  start() {
+    let state = new State()
+    state.setupView()
+
+    let input = new Input(state)
+    input.setupView()
+  }
+}
+
+let typer = new Main()
+typer.start()
