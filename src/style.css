@@ -37,6 +37,10 @@ input {
   margin-bottom: 5px;
 }
 
+.state-view {
+  padding: 10px;
+}
+
 p.error-text {
   color: red;
   font-weight: bold;
@@ -64,4 +68,5 @@ p.command-text {
   flex-basis: 100%;
   flex: 1;
   padding: 10px;
+
 }

@@ -17,6 +17,8 @@ export class Input {
     history?.appendChild(historyWindow)
   
     // Input
+    let point = document.createElement('p')
+    point.innerHTML = '\> '
     let input = document.createElement('input')
     let _this = this
     input.addEventListener('keyup', function(event) {
@@ -31,6 +33,7 @@ export class Input {
         input.value = ''
       }
     });
-    history?.appendChild(input)
+    point.appendChild(input)
+    history?.appendChild(point)
   }
 }
