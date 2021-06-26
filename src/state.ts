@@ -1,3 +1,5 @@
+import { Graphics } from './graphics'
+
 export enum COMMANDS {
   MOV = 'MOV',
   ADD = 'ADD',
@@ -5,7 +7,9 @@ export enum COMMANDS {
   INC = 'INC',
   MUL = 'MUL',
   SUB = 'SUB',
-  DIV = 'DIV'
+  DIV = 'DIV',
+  POKE = 'POKE',
+  PLCE = 'PLCE'
 }
 
 export enum DESTINATIONS {
@@ -19,8 +23,10 @@ export class State {
   private _view: HTMLElement
   private _values: any
   private _previous: string[]
+  private _graphics: Graphics
 
-  constructor() {
+  constructor(_graphics: Graphics) {
+    this._graphics = _graphics
     let viewContainer = document.getElementById('state')
 
     // State view window
@@ -102,11 +108,23 @@ export class State {
         this._handleINC(_parts)
         break
       }
+      case COMMANDS.POKE: {
+        this._logCommand(_command)
+        this._handlePOKE(_parts)
+        break
+      }
+      case COMMANDS.PLCE: {
+        this._logCommand(_command)
+        this._handlePLCE(_parts)
+        break
+      }
       default: {
         this._logError(`Unknown command '${_parts[0]}'.`)
         break
       }
     }
+
+    this.updateView()
   }
 
   _logCommand(_text: string) {
@@ -154,8 +172,6 @@ export class State {
       this._logError(`Invalid destination '${_dest}'.`)
       return
     }
-
-    this.updateView()
   }
 
   /**
@@ -189,8 +205,6 @@ export class State {
       this._logError(`Invalid destination '${_dest}'.`)
       return
     }
-
-    this.updateView()
   }
 
   /**
@@ -224,7 +238,6 @@ export class State {
       this._logError(`Invalid destination '${_dest}'.`)
       return
     }
-    this.updateView()
   }
 
   /**
@@ -258,8 +271,6 @@ export class State {
       this._logError(`Invalid destination '${_dest}'.`)
       return
     }
-
-    this.updateView()
   }
 
   /**
@@ -294,7 +305,6 @@ export class State {
       return
     }
 
-    this.updateView()
   }
 
   /**
@@ -312,8 +322,6 @@ export class State {
 
     let _dest = COMMANDS.FLG
     this._values[_dest] = parseInt(_args)
-
-    this.updateView()
   }
 
   /**
@@ -330,8 +338,34 @@ export class State {
     }
 
     this._values[_args] += 1
+  }
 
-    this.updateView()
+  _handlePOKE(_parts: string[]) {
+    let _args = _parts[1].split(',')
+
+    if (_args.length !== 2) {
+      this._logError(`Invalid arguments.`)
+      return
+    }
+
+    let _coords = this._validCoordinates(_args)
+    if (_coords[0] >= 0 && _coords[1] >= 0) {
+      this._graphics.setPixel(_coords[0], _coords[1], 'black')
+    }
+  }
+
+  _handlePLCE(_parts: string[]) {
+    let _args = _parts[1].split(',')
+
+    if (_args.length !== 2) {
+      this._logError(`Invalid arguments.`)
+      return
+    }
+
+    let _coords = this._validCoordinates(_args)
+    if (_coords[0] >= 0 && _coords[1] >= 0) {
+      this._graphics.setPixel(_coords[0], _coords[1], 'white')
+    }
   }
 
   /**
@@ -350,5 +384,51 @@ export class State {
       }
     }
     return false
+  }
+
+  _graphicsInRange(_value: string) {
+    if (isNaN(parseInt(_value)) || this._graphics.getDimensions()[0] - 1 < parseInt(_value) || parseInt(_value) < 0) {
+      return false
+    }
+    return true
+  }
+
+  _validCoordinates(_args: string[]) {
+    let _x = -1, _y = -1;
+
+    // X-values
+    if (this._isLabel(_args[0])) {
+      // Check X-value for label
+      if (!this._graphicsInRange(this._values[_args[0]].toString())) {
+        this._logError(`Value of '${_args[0]}' is an invalid X-value.`)
+        return [_x, _y]
+      }
+      _x = this._values[_args[0]]
+    } else if (!this._isLabel(_args[0])) {
+      // Check X-value for value
+      if (!this._graphicsInRange(_args[0])) {
+        this._logError(`Value '${_args[0]}' is an invalid X-value.`)
+        return [_x, _y]
+      }
+      _x = parseInt(_args[0])
+    } 
+
+    // Y-values
+    if (this._isLabel(_args[1])) {
+      // Check Y-value for label
+      if (!this._graphicsInRange(this._values[_args[1]].toString())) {
+        this._logError(`Value of '${_args[1]}' is an invalid Y-value.`)
+        return [_x, _y]
+      }
+      _y = this._values[_args[1]]
+    } else if (!this._isLabel(_args[0])) {
+      // Check Y-value for value
+      if (!this._graphicsInRange(_args[1])) {
+        this._logError(`Value '${_args[1]}' is an invalid Y-value.`)
+        return [_x, _y]
+      }
+      _y = parseInt(_args[1])
+    }
+    return [_x, _y]
   }
 }
