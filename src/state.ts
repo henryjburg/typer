@@ -2,6 +2,7 @@ import { Graphics } from './graphics'
 
 export enum COMMANDS {
   MOV = 'MOV',
+  CPY = 'CPY',
   ADD = 'ADD',
   FLG = 'FLG',
   INC = 'INC',
@@ -76,6 +77,11 @@ export class State {
       case COMMANDS.MOV: {
         this._logCommand(_command)
         this._handleMOV(_parts)
+        break
+      }
+      case COMMANDS.CPY: {
+        this._logCommand(_command)
+        this._handleCPY(_parts)
         break
       }
       case COMMANDS.ADD: {
@@ -160,18 +166,67 @@ export class State {
     let _dest = _args[1]
 
     if (this._isLabel(_src) && this._isLabel(_dest)) {
+      if (_dest === DESTINATIONS.FLG) {
+        console.debug(_src)
+        this._handleFLG([_parts[0], this._values[_src].toString()])
+        return
+      }
+
       // If both are labels
       this._values[_dest] = this._values[_src]
       if (_src !== _dest) {
         this._values[_src] = 0
       }
+      return
     } else if (this._isLabel(_dest)) {
       // If destination is a label, source is a value
+      if (_dest === DESTINATIONS.FLG) {
+        this._handleFLG([_parts[0], _src])
+        return
+      }
       this._values[_dest] = parseInt(_src)
-    } else {
-      this._logError(`Invalid destination '${_dest}'.`)
       return
     }
+
+    this._logError(`Invalid destination '${_dest}'.`)
+    return
+  }
+
+  _handleCPY(_parts: string[]) {
+    // Should have two items
+    let _args = _parts[1].split(',')
+
+    if (_args.length !== 2) {
+      this._logError(`Invalid arguments.`)
+      return
+    }
+
+    // Extract the source and destination
+    let _src = _args[0]
+    let _dest = _args[1]
+
+    if (this._isLabel(_src) && this._isLabel(_dest)) {
+      if (_dest === DESTINATIONS.FLG) {
+        console.debug(_src)
+        this._handleFLG([_parts[0], this._values[_src].toString()])
+        return
+      }
+
+      // If both are labels
+      this._values[_dest] = this._values[_src]
+      return
+    } else if (this._isLabel(_dest)) {
+      // If destination is a label, source is a value
+      if (_dest === DESTINATIONS.FLG) {
+        this._handleFLG([_parts[0], _src])
+        return
+      }
+      this._values[_dest] = parseInt(_src)
+      return
+    }
+
+    this._logError(`Invalid destination '${_dest}'.`)
+    return
   }
 
   /**
@@ -199,12 +254,13 @@ export class State {
 
     if (!this._isLabel(_src)) {
       this._values[_dest] += parseInt(_src)
+      return
     } else if(this._isLabel(_src)) {
       this._values[_dest] += this._values[_src]
-    } else {
-      this._logError(`Invalid destination '${_dest}'.`)
       return
     }
+    this._logError(`Invalid destination '${_dest}'.`)
+    return
   }
 
   /**
@@ -232,12 +288,13 @@ export class State {
 
     if (!this._isLabel(_src)) {
       this._values[_dest] *= parseInt(_src)
+      return
     } else if(this._isLabel(_src)) {
       this._values[_dest] *= this._values[_src]
-    } else {
-      this._logError(`Invalid destination '${_dest}'.`)
       return
     }
+    this._logError(`Invalid destination '${_dest}'.`)
+    return
   }
 
   /**
@@ -265,12 +322,13 @@ export class State {
 
     if (!this._isLabel(_src)) {
       this._values[_dest] -= parseInt(_src)
+      return
     } else if(this._isLabel(_src)) {
       this._values[_dest] -= this._values[_src]
-    } else {
-      this._logError(`Invalid destination '${_dest}'.`)
       return
     }
+    this._logError(`Invalid destination '${_dest}'.`)
+    return
   }
 
   /**
@@ -298,13 +356,13 @@ export class State {
 
     if (parseInt(_src) !== 0 && !this._isLabel(_src)) {
       this._values[_dest] /= parseInt(_src)
+      return
     } else if(this._values[_src] !== 0 && this._isLabel(_src)) {
       this._values[_dest] /= this._values[_src]
-    } else {
-      this._logError(`Invalid operation.`)
       return
     }
-
+    this._logError(`Invalid operation.`)
+    return
   }
 
   /**

@@ -17,6 +17,7 @@ To start the development version of Typer, run `yarn`, then `yarn dev`. Typer wi
 | Name        | Syntax        | Example   |
 | ----------- | ------------- | --------- |
 | `MOV`       | `MOV s,d`     | `MOV 1,R0` (Move 1 to the `R0` register) |
+| `CPY`       | `CPY s,d`     | `CPY R1,R0` (Copythe value of `R1` to the `R0` register) |
 | `ADD`       | `ADD s,d`     | `ADD 1,STR` (Add 1 to the `STR` register, placing the output in `STR`) |
 | `SUB`       | `SUB s,d`     | `SUB 3,R0` (Subtract 3 from the `R0` register, placing the output in `R0`) |
 | `MUL`       | `MUL s,d`     | `MUL 2,R1` (Multiply the value of `R1` by 2, placing the output in `R1`) |
