@@ -1,17 +1,5 @@
 import { Graphics } from './graphics'
-
-export enum COMMANDS {
-  MOV = 'MOV',
-  CPY = 'CPY',
-  ADD = 'ADD',
-  FLG = 'FLG',
-  INC = 'INC',
-  MUL = 'MUL',
-  SUB = 'SUB',
-  DIV = 'DIV',
-  POKE = 'POKE',
-  PLCE = 'PLCE'
-}
+import { COMMANDS } from './parser'
 
 export enum DESTINATIONS {
   STR = 'STR',
@@ -20,7 +8,7 @@ export enum DESTINATIONS {
   R1 = 'R1'
 }
 
-export class State {
+export class Core {
   private _view: HTMLElement
   private _values: any
   private _previous: string[]
