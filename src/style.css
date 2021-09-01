@@ -1,5 +1,29 @@
 #app {
   background-color: black;
+  font-family:'Courier New', Courier, monospace;
+  font-size: large;
+  font-weight: bolder;
+}
+
+input {
+  background-color: black;
+  color: green;
+  font-size: large;
+  border: none;
+  margin-left: 12px;
+  width: 100%;
+  font-family:'Courier New', Courier, monospace;
+  font-size: large;
+  font-weight: bolder;
+}
+
+input:focus {
+  border: none;
+  outline: none;
+}
+
+.command-input {
+  display: flex;
 }
 
 .display-container {
