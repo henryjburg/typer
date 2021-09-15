@@ -38,6 +38,7 @@ input:focus {
   border-style: solid;
   border-radius: 20px;
   height: 100%;
+  overflow-y: scroll;
 }
 
 .status-container {
